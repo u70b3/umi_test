@@ -9,7 +9,7 @@ import ProLayout, {
   BasicLayoutProps as ProLayoutProps,
   Settings,
 } from '@ant-design/pro-layout';
-import { Link, useIntl, connect, Dispatch } from 'umi';
+import { Link, history, Dispatch } from 'umi';
 import React, { useEffect, useState } from 'react';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import logoImg from '@/assets/rayplus.png';
@@ -18,9 +18,7 @@ import { UseInfoDataType } from '@/models/data';
 import style from './index.less';
 
 export interface BasicLayoutProps extends ProLayoutProps {
-  breadcrumbNameMap: {
-    [path: string]: MenuDataItem; // proLayout的组件
-  };
+  breadcrumbNameMap: Record<string, MenuDataItem>;
   route: ProLayoutProps['route'] & {
     authority: string[];
   };
