@@ -38,7 +38,7 @@ const defaultProps = {
       routes: [
         {
           path: '/PhotoProcessing/PhotoEditor',
-          name: '111',
+          name: '基础demo:拖拽功能',
           icon: <SmileOutlined />,
         },
         {
