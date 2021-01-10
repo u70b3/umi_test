@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Stage, Layer, Rect, Text, Circle, Line, Star, Image, Transformer } from 'react-konva';
 import Konva from 'konva';
 import RomaImg from '@/assets/Eastern_roman_empire_flag.png';
-import useImage from 'use-image';
 import knightImg from '@/assets/knight.jpg';
+import useImage from 'use-image';
 
 const pulseShape = (shape: any) => {
   // use Konva methods to animate a shape
