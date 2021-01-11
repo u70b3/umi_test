@@ -22,4 +22,8 @@ export interface ImgRegionToolDataType {
 
   // 状态
   isDrawing: boolean;
+  toolState: string;
+
+  // 选区
+  regions: any[];
 }

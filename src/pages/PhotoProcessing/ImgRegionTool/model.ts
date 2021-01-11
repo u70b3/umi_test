@@ -23,6 +23,8 @@ const init_data = {
   imageOffsetX: 0,
   imageOffsetY: 0,
   isDrawing: false,
+  regions: [],
+  toolState: 'default',
 };
 
 export interface ModelType {
@@ -33,7 +35,7 @@ export interface ModelType {
   reducers: {
     save: Reducer<StateType>;
     setImgRegionTool: Reducer<StateType>;
-    // toggleIsDrawing: Reducer<StateType>;
+    toggleIsDrawing: Reducer<StateType>;
   };
 }
 
@@ -47,12 +49,12 @@ const Model: ModelType = {
   effects: {},
 
   reducers: {
-    // toggleIsDrawing(state) {
-    //   if (state) {
-    //     return { ...state, isDrawing: !state.imgRegionTool.isDrawing };
-    //   }
-    //   return { ...state, isDrawing: false };
-    // },
+    toggleIsDrawing(state) {
+      if (state) {
+        return { ...state, isDrawing: !state.imgRegionTool.isDrawing };
+      }
+      return { imgRegionTool: init_data };
+    },
     save(state, { payload }) {
       return { ...state, ...payload };
     },
