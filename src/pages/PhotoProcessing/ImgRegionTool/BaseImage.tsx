@@ -75,8 +75,8 @@ const BaseImage: React.FC<BaseImageProps> = props => {
         x={imgRegionTool?.imageX}
         y={imgRegionTool?.imageY}
         // draggable={imgRegionTool?.toolState === 'default'}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
+        // onDragStart={handleDragStart}
+        // onDragEnd={handleDragEnd}
       />
     </Layer>
   );
