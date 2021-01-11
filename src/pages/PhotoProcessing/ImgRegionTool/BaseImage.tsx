@@ -18,17 +18,17 @@ const BaseImage: React.FC<BaseImageProps> = props => {
 
   const [image] = useImage(knightImg);
 
-  const handleDragStart = (e: any) => {
-    console.log('e', e);
-  };
-  const handleDragEnd = (e: any) => {
-    console.log('e', e);
+  // const handleDragStart = (e: any) => {
+  //   console.log('e', e);
+  // };
+  // const handleDragEnd = (e: any) => {
+  //   console.log('e', e);
 
-    setImgRegionTool({
-      imageX: e.target.attrs.x,
-      imageY: e.target.attrs.y,
-    });
-  };
+  //   setImgRegionTool({
+  //     imageX: e.target.attrs.x,
+  //     imageY: e.target.attrs.y,
+  //   });
+  // };
 
   useEffect(() => {
     if (!image) {
