@@ -160,7 +160,7 @@ const generateShapes = () => {
 const INITIAL_STATE = generateShapes();
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-const PhotoEditor: React.FC<{}> = () => {
+const BaseDemo: React.FC<{}> = () => {
   const [stars, setStars] = React.useState(INITIAL_STATE);
   const [isSelected, setIsSelected] = useState(false);
 
@@ -248,4 +248,4 @@ const PhotoEditor: React.FC<{}> = () => {
   );
 };
 
-export default PhotoEditor;
+export default BaseDemo;

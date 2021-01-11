@@ -19,8 +19,12 @@ export default [
             component: '@/pages/index.tsx',
           },
           {
-            path: '/PhotoProcessing/PhotoEditor',
-            component: '@/pages/PhotoProcessing/PhotoEditor',
+            path: '/PhotoProcessing/BaseDemo',
+            component: '@/pages/PhotoProcessing/BaseDemo',
+          },
+          {
+            path: '/PhotoProcessing/ImgRegionTool',
+            component: '@/pages/PhotoProcessing/ImgRegionTool',
           },
           {
             component: '404',

@@ -37,13 +37,13 @@ const defaultProps = {
       access: 'canAdmin',
       routes: [
         {
-          path: '/PhotoProcessing/PhotoEditor',
+          path: '/PhotoProcessing/BaseDemo',
           name: '基础demo:拖拽功能',
           icon: <SmileOutlined />,
         },
         {
-          path: '/PhotoProcessing/sub-page2',
-          name: '222',
+          path: '/PhotoProcessing/ImgRegionTool',
+          name: '图片选区工具',
           icon: <SmileOutlined />,
         },
         {
