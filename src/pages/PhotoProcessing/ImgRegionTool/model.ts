@@ -20,8 +20,6 @@ const init_data = {
   imageHeight: 100,
   imageX: 0,
   imageY: 0,
-  imageOffsetX: 0,
-  imageOffsetY: 0,
   isDrawing: false,
   regions: [],
   toolState: 'default',

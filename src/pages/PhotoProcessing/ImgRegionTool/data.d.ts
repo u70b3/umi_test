@@ -16,9 +16,6 @@ export interface ImgRegionToolDataType {
   // 图片的坐标
   imageX: number;
   imageY: number;
-  // 图片的偏移
-  imageOffsetX: number;
-  imageOffsetY: number;
 
   // 状态
   isDrawing: boolean;
