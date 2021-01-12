@@ -13,8 +13,8 @@ export interface StateType {
 }
 
 const init_data = {
-  StageWidht: 0,
-  StageHeight: 0,
+  StageWidht: 640,
+  StageHeight: 480,
   StageScale: 1,
   imageWidth: 100,
   imageHeight: 100,
@@ -22,7 +22,10 @@ const init_data = {
   imageY: 0,
   isDrawing: false,
   regions: [],
+  maxId: 0,
   toolState: 'default',
+  regionsStrokeWidth: 8,
+  regionsFontSize: 42,
 };
 
 export interface ModelType {
@@ -33,7 +36,6 @@ export interface ModelType {
   reducers: {
     save: Reducer<StateType>;
     setImgRegionTool: Reducer<StateType>;
-    toggleIsDrawing: Reducer<StateType>;
   };
 }
 
@@ -47,12 +49,6 @@ const Model: ModelType = {
   effects: {},
 
   reducers: {
-    toggleIsDrawing(state) {
-      if (state) {
-        return { ...state, isDrawing: !state.imgRegionTool.isDrawing };
-      }
-      return { imgRegionTool: init_data };
-    },
     save(state, { payload }) {
       return { ...state, ...payload };
     },

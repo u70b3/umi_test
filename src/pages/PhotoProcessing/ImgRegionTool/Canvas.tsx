@@ -3,7 +3,7 @@
  * @Author: linkenzone
  * @Date: 2021-01-11 10:08:24
  */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
 import { connect, Dispatch } from 'umi';
 import { StateType } from './model';
 import { ImgRegionToolDataType } from './data';
@@ -11,6 +11,7 @@ import { Stage } from 'react-konva';
 import Konva from 'konva';
 
 import BaseImage from './BaseImage';
+
 import Regions from './Regions';
 
 interface CanvasProps {
@@ -18,9 +19,7 @@ interface CanvasProps {
   imgRegionTool?: ImgRegionToolDataType;
 }
 
-let id = 1;
-
-const Canvas: React.FC<CanvasProps> = props => {
+const Canvas: React.FC<CanvasProps> = (props, ref) => {
   const { imgRegionTool, dispatch } = props;
 
   // 获取node
@@ -73,17 +72,60 @@ const Canvas: React.FC<CanvasProps> = props => {
     return { x: (StageWidht - imageWidth) / 2, y: (StageHeight - imageHeight) / 2 };
   };
 
-  /**
-   * @description: 重置图片的位置
-   * @Param:
-   */
+  const ToImgRelativePosition = ({ x, y }: any) => {
+    if (imgRegionTool) {
+      return { x: x - imgRegionTool.imageX, y: y - imgRegionTool.imageY };
+    }
+    return { x: 0, y: 0 };
+  };
+
+  useImperativeHandle(ref, () => ({
+    // changeVal 就是暴露给父组件的方法
+    resetImg: () => {
+      if (imgRegionTool) {
+        let scale = 1;
+        if (imgRegionTool.imageWidth > 640 || imgRegionTool.imageHeight > 480) {
+          scale = Math.min(
+            imgRegionTool.StageWidht / imgRegionTool.imageWidth,
+            imgRegionTool.StageHeight / imgRegionTool.imageHeight,
+          );
+        }
+
+        const { x, y } = ImgToCenter({
+          imageWidth: imgRegionTool.imageWidth,
+          imageHeight: imgRegionTool.imageHeight,
+          StageWidht: imgRegionTool.StageWidht / scale,
+          StageHeight: imgRegionTool.StageHeight / scale,
+        });
+
+        dispatch({
+          type: 'imgRegionTool/setImgRegionTool',
+          payload: {
+            StageScale: scale,
+            imageX: x,
+            imageY: y,
+          },
+        });
+
+        stageRef.current.x(0);
+        stageRef.current.y(0);
+        stageRef.current.scaleX(scale);
+        stageRef.current.scaleY(scale);
+
+        stageRef.current.batchDraw();
+      }
+    },
+  }));
 
   const resetImg = () => {
     if (imgRegionTool) {
-      const scale = Math.min(
-        imgRegionTool.StageWidht / imgRegionTool.imageWidth,
-        imgRegionTool.StageHeight / imgRegionTool.imageHeight,
-      );
+      let scale = 1;
+      if (imgRegionTool.imageWidth > 640 || imgRegionTool.imageHeight > 480) {
+        scale = Math.min(
+          imgRegionTool.StageWidht / imgRegionTool.imageWidth,
+          imgRegionTool.StageHeight / imgRegionTool.imageHeight,
+        );
+      }
 
       const { x, y } = ImgToCenter({
         imageWidth: imgRegionTool.imageWidth,
@@ -103,6 +145,8 @@ const Canvas: React.FC<CanvasProps> = props => {
 
       stageRef.current.x(0);
       stageRef.current.y(0);
+      stageRef.current.scaleX(scale);
+      stageRef.current.scaleY(scale);
 
       stageRef.current.batchDraw();
     }
@@ -115,7 +159,7 @@ const Canvas: React.FC<CanvasProps> = props => {
    * @param {any} scaleBy
    */
 
-  const zoomStage = (stage: any, scaleBy: any) => {
+  const zoomStage = (stage: any, scaleBy: any, duration: number) => {
     const oldScale = stage.scaleX();
 
     // 获取中点
@@ -142,7 +186,7 @@ const Canvas: React.FC<CanvasProps> = props => {
       y: newAttrs.y,
       scaleX: newAttrs.scale,
       scaleY: newAttrs.scale,
-      duration: 0.1,
+      duration,
     });
 
     dispatch({
@@ -158,18 +202,21 @@ const Canvas: React.FC<CanvasProps> = props => {
 
   useEffect(() => {
     // const container = document.querySelector('.right-panel');
-    dispatch({
-      type: 'imgRegionTool/setImgRegionTool',
-      payload: {
-        StageWidht: 640,
-        StageHeight: 480,
-      },
-    });
-  }, [dispatch]);
+    // dispatch({
+    //   type: 'imgRegionTool/setImgRegionTool',
+    //   payload: {
+    //     StageWidht: 640,
+    //     StageHeight: 480,
+    //   },
+    // });
+    resetImg();
+  }, []);
 
   // useEffect(() => {
   //   // const container = document.querySelector('.right-panel');
-  //   // console.log('imgRegionTool', imgRegionTool);
+  //   console.log('imgRegionTool', imgRegionTool);
+  //   stageRef.current.scaleX(imgRegionTool?.StageScale);
+  //   stageRef.current.scaleY(imgRegionTool?.StageScale);
   // }, [imgRegionTool]);
 
   return (
@@ -179,8 +226,6 @@ const Canvas: React.FC<CanvasProps> = props => {
         draggable={imgRegionTool?.toolState === 'default'}
         width={imgRegionTool?.StageWidht}
         height={imgRegionTool?.StageHeight}
-        scaleX={imgRegionTool?.StageScale}
-        scaleY={imgRegionTool?.StageScale}
         style={{ boxShadow: '0 0 5px grey' }}
         onMouseDown={e => {
           if (imgRegionTool?.toolState !== 'region') {
@@ -190,12 +235,14 @@ const Canvas: React.FC<CanvasProps> = props => {
             type: 'imgRegionTool/setImgRegionTool',
             payload: { isDrawing: true },
           });
-
-          const point = getRelativePointerPosition(e.target.getStage());
+          // 获取相对坐标
+          let point = getRelativePointerPosition(e.target.getStage());
+          // 获取相对于图片的坐标
+          point = ToImgRelativePosition(point);
           const region = {
             // eslint-disable-next-line no-plusplus
-            id: id++,
-            name: `New Region${id}`,
+            id: imgRegionTool.maxId + 1,
+            name: `New Region${imgRegionTool.maxId + 1}`,
             points: [point],
           };
 
@@ -205,15 +252,18 @@ const Canvas: React.FC<CanvasProps> = props => {
           });
         }}
         onMouseMove={e => {
-          // if (!imgRegionTool?.isDrawing || imgRegionTool.toolState !== 'region') {
-          //   return;
-          // }
-          if (!imgRegionTool?.isDrawing) {
+          if (!imgRegionTool?.isDrawing || imgRegionTool.toolState !== 'region') {
             return;
           }
+          // if (!imgRegionTool?.isDrawing) {
+          //   return;
+          // }
           if (imgRegionTool) {
             const lastRegion = { ...imgRegionTool.regions[imgRegionTool.regions.length - 1] };
-            const point = getRelativePointerPosition(e.target.getStage());
+            // 获取相对坐标
+            let point = getRelativePointerPosition(e.target.getStage());
+            // 获取相对于图片的坐标
+            point = ToImgRelativePosition(point);
             lastRegion.points = lastRegion.points.concat([point]);
             // 删除最后一个区域
             imgRegionTool.regions.splice(imgRegionTool.regions.length - 1, 1);
@@ -224,12 +274,12 @@ const Canvas: React.FC<CanvasProps> = props => {
           }
         }}
         onMouseUp={e => {
-          // if (!imgRegionTool?.isDrawing || imgRegionTool.toolState !== 'region') {
-          //   return;
-          // }
-          if (!imgRegionTool?.isDrawing) {
+          if (!imgRegionTool?.isDrawing || imgRegionTool.toolState !== 'region') {
             return;
           }
+          // if (!imgRegionTool?.isDrawing) {
+          //   return;
+          // }
           if (imgRegionTool) {
             const lastRegion = imgRegionTool.regions[imgRegionTool.regions.length - 1];
             // 如果不足3个点，则删除
@@ -237,7 +287,7 @@ const Canvas: React.FC<CanvasProps> = props => {
               imgRegionTool.regions.splice(imgRegionTool.regions.length - 1, 1);
               dispatch({
                 type: 'imgRegionTool/setImgRegionTool',
-                payload: { regions: imgRegionTool.regions },
+                payload: { regions: imgRegionTool.regions, isDrawing: false },
               });
             } else {
               // 每10个点进行采样
@@ -251,20 +301,40 @@ const Canvas: React.FC<CanvasProps> = props => {
               imgRegionTool.regions.splice(imgRegionTool.regions.length - 1, 1);
               dispatch({
                 type: 'imgRegionTool/setImgRegionTool',
-                payload: { regions: imgRegionTool.regions.concat([newlastRegion]) },
+                payload: {
+                  regions: imgRegionTool.regions.concat([newlastRegion]),
+                  maxId: imgRegionTool.maxId + 1,
+                  isDrawing: false,
+                },
               });
             }
-            // 结束绘图的状态
-            dispatch({
-              type: 'imgRegionTool/setImgRegionTool',
-              payload: { isDrawing: false },
-            });
           }
+        }}
+        onWheel={(e: any) => {
+          e.evt.preventDefault();
+          if (e.evt.deltaY > 0) {
+            zoomStage(stageRef.current, 0.8, 0.1);
+          } else {
+            zoomStage(stageRef.current, 1.2, 0.1);
+          }
+        }}
+        onMouseEnter={(e: any) => {
+          const container = e.target.getStage().container();
+          if (imgRegionTool?.toolState === 'default') {
+            container.style.cursor = 'move';
+          } else {
+            container.style.cursor = 'crosshair';
+          }
+        }}
+        onMouseLeave={(e: any) => {
+          const container = e.target.getStage().container();
+          container.style.cursor = 'default';
         }}
       >
         <BaseImage
           imgRegionTool={imgRegionTool}
           ImgToCenter={ImgToCenter}
+          stageRef={stageRef}
           setImgRegionTool={payload => {
             dispatch({
               type: 'imgRegionTool/setImgRegionTool',
@@ -275,19 +345,26 @@ const Canvas: React.FC<CanvasProps> = props => {
           }}
         />
 
-        <Regions regions={imgRegionTool?.regions} />
+        <Regions
+          regions={imgRegionTool?.regions}
+          imagePos={{ x: imgRegionTool?.imageX, y: imgRegionTool?.imageY }}
+          regionAttribute={{
+            strokeWidth: imgRegionTool ? imgRegionTool.regionsStrokeWidth : 4,
+            fontSize: imgRegionTool ? imgRegionTool.regionsFontSize : 42,
+          }}
+        />
       </Stage>
-      <div className="zoom-container">
+      {/* <div className="zoom-container">
         <button
           onClick={() => {
-            zoomStage(stageRef.current, 1.2);
+            zoomStage(stageRef.current, 1.2, 0.1);
           }}
         >
           +
         </button>
         <button
           onClick={() => {
-            zoomStage(stageRef.current, 0.8);
+            zoomStage(stageRef.current, 0.8, 0.1);
           }}
         >
           -
@@ -299,22 +376,7 @@ const Canvas: React.FC<CanvasProps> = props => {
         >
           reset
         </button>
-
-        {/* <button
-          onClick={() => {
-            if (imgRegionTool) {
-              dispatch({
-                type: 'imgRegionTool/setImgRegionTool',
-                payload: {
-                  imageX: imgRegionTool.imageX + 10,
-                },
-              });
-            }
-          }}
-        >
-          右移
-        </button> */}
-      </div>
+      </div> */}
     </>
   );
 };
@@ -325,4 +387,4 @@ const mapStateToProps = ({ imgRegionTool }: { imgRegionTool: StateType }) => {
   };
 };
 
-export default connect(mapStateToProps)(Canvas);
+export default connect(mapStateToProps, null, null, { forwardRef: true })(forwardRef(Canvas));

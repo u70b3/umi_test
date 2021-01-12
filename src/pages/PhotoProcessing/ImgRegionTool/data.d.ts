@@ -23,4 +23,6 @@ export interface ImgRegionToolDataType {
 
   // 选区
   regions: any[];
+  maxId: number;
+  regionsStrokeWidth: number;
 }
