@@ -25,4 +25,5 @@ export interface ImgRegionToolDataType {
   regions: any[];
   maxId: number;
   regionsStrokeWidth: number;
+  regionsFontSize: number;
 }
