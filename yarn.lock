@@ -1966,6 +1966,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/dat.gui@^0.7.6":
+  version "0.7.6"
+  resolved "https://registry.npm.taobao.org/@types/dat.gui/download/@types/dat.gui-0.7.6.tgz#61aaacdb01f70e1401e051dfcf4192a30acb2435"
+  integrity sha1-Yaqs2wH3DhQB4FHfz0GSowrLJDU=
+
 "@types/debug@4.1.5":
   version "4.1.5"
   resolved "https://registry.yarnpkg.com/@types/debug/-/debug-4.1.5.tgz#b14efa8852b7768d898906613c23f688713e02cd"
@@ -5350,6 +5355,11 @@ dashdash@^1.12.0:
   integrity sha1-hTz6D3y+L+1d4gMmuN1YEDX24vA=
   dependencies:
     assert-plus "^1.0.0"
+
+dat.gui@^0.7.7:
+  version "0.7.7"
+  resolved "https://registry.npm.taobao.org/dat.gui/download/dat.gui-0.7.7.tgz#7f96dbd21621a76385203659aebfa264ee6ae89b"
+  integrity sha1-f5bb0hYhp2OFIDZZrr+iZO5q6Js=
 
 data-urls@^1.1.0:
   version "1.1.0"
@@ -14540,6 +14550,11 @@ thenify-all@^1.0.0:
   integrity sha512-RVZSIV5IG10Hk3enotrhvz0T9em6cyHBLkH/YAZuKqd8hRkKhSfCGIcP2KUY0EPxndzANBmNllzWPwak+bheSw==
   dependencies:
     any-promise "^1.0.0"
+
+three@^0.124.0:
+  version "0.124.0"
+  resolved "https://registry.npm.taobao.org/three/download/three-0.124.0.tgz#14ab1a26ba6c56e51190e1b55695cd3c1e69ea55"
+  integrity sha1-FKsaJrpsVuURkOG1VpXNPB5p6lU=
 
 throat@^5.0.0:
   version "5.0.0"

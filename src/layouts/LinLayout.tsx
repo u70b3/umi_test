@@ -46,9 +46,31 @@ const defaultProps = {
           name: '图片选区工具',
           icon: <SmileOutlined />,
         },
+        // {
+        //   path: '/PhotoProcessing/sub-page3',
+        //   name: '333',
+        //   icon: <SmileOutlined />,
+        // },
+      ],
+    },
+    {
+      path: '/ThreeJs',
+      name: 'ThreeJs',
+      icon: <SmileOutlined />,
+      routes: [
         {
-          path: '/PhotoProcessing/sub-page3',
-          name: '333',
+          path: '/ThreeJs/BaseDemo',
+          name: '基础demo',
+          icon: <SmileOutlined />,
+        },
+        {
+          path: '/ThreeJs/ModelDemo',
+          name: '模型demo',
+          icon: <SmileOutlined />,
+        },
+        {
+          path: '/ThreeJs/VolumeDemo',
+          name: '小鼠demo',
           icon: <SmileOutlined />,
         },
       ],

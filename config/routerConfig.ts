@@ -26,6 +26,22 @@ export default [
             path: '/PhotoProcessing/ImgRegionTool',
             component: '@/pages/PhotoProcessing/ImgRegionTool',
           },
+
+          {
+            path: '/ThreeJs/BaseDemo',
+            component: '@/pages/ThreeJs/BaseDemo',
+          },
+
+          {
+            path: '/ThreeJs/ModelDemo',
+            component: '@/pages/ThreeJs/ModelDemo',
+          },
+
+          {
+            path: '/ThreeJs/VolumeDemo',
+            component: '@/pages/ThreeJs/VolumeDemo',
+          },
+
           {
             component: '404',
           },
