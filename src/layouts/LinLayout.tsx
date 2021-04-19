@@ -76,6 +76,18 @@ const defaultProps = {
       ],
     },
     {
+      path: '/Vtk',
+      name: 'Vtk',
+      icon: <SmileOutlined />,
+      routes: [
+        {
+          path: '/Vtk/BaseDemo',
+          name: '基础demo',
+          icon: <SmileOutlined />,
+        },
+      ],
+    },
+    {
       path: '/admin/sub-page3',
       name: '三级页面',
       icon: <SmileOutlined />,
