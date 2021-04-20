@@ -42,8 +42,12 @@ export default [
             component: '@/pages/ThreeJs/VolumeDemo',
           },
           {
-            path: '/Vtk/BaseDemo',
-            component: '@/pages/Vtk/BaseDemo',
+            path: '/Vtk/VolumeDemo',
+            component: '@/pages/Vtk/VolumeDemo',
+          },
+          {
+            path: '/Vtk/SliceDemo',
+            component: '@/pages/Vtk/SliceDemo',
           },
           {
             component: '404',

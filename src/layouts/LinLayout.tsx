@@ -81,8 +81,13 @@ const defaultProps = {
       icon: <SmileOutlined />,
       routes: [
         {
-          path: '/Vtk/BaseDemo',
-          name: '基础demo',
+          path: '/Vtk/VolumeDemo',
+          name: '体绘制demo',
+          icon: <SmileOutlined />,
+        },
+        {
+          path: '/Vtk/SliceDemo',
+          name: '切片demo',
           icon: <SmileOutlined />,
         },
       ],
